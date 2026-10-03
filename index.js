@@ -9013,8 +9013,13 @@ function deduplicateTags(tagString) {
     return "";
   }
   const uniqueTags = /* @__PURE__ */ new Map();
+  let __breakCounter = 0;
   for (let tag of tags) {
     tag = tag.replace(/__ST_JSON_TAG_(\d+)__/g, (m, idx) => placeholders[parseInt(idx)]);
+    if (tag.trim() === "BREAK") {
+      uniqueTags.set(`__BREAK_KEEP_${__breakCounter++}__`, tag);
+      continue;
+    }
     const baseTag = getBaseTag(tag);
     if (!uniqueTags.has(baseTag)) {
       uniqueTags.set(baseTag, tag);
